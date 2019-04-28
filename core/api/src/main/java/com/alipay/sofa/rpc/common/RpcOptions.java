@@ -357,6 +357,18 @@ public class RpcOptions {
      * @since 5.2.0
      */
     public static final String CONSUMER_REPEATED_REFERENCE_LIMIT        = "consumer.repeated.reference.limit";
+    /**
+     * 初始化连接时建立连接的百分比
+     *
+     * @since 5.5.0
+     */
+    public static final String CONSUMER_CONNECT_ELASTIC_PRECENT         = "consumer.connect.elastic.precent";
+    /**
+     * 初始化连接时建立连接的个数
+     *
+     * @since 5.5.0
+     */
+    public static final String CONCUMER_CONNECT_ELASTIC_SIZE            = "consumer.connect.elastic.size";
 
     /**
      * 默认回调线程池最小
@@ -497,4 +509,25 @@ public class RpcOptions {
      * Whether to close lookout collection.
      */
     public static final String LOOKOUT_COLLECT_DISABLE                  = "lookout.collect.disable";
+
+    /**
+     * Automatic fault tolerance regulator
+     */
+    public static final String AFT_REGULATOR                            = "aft.regulator";
+    /**
+     * Automatic fault tolerance regulation strategy
+     */
+    public static final String AFT_REGULATION_STRATEGY                  = "aft.regulation.strategy";
+    /**
+     * Automatic fault tolerance recover strategy
+     */
+    public static final String AFT_RECOVER_STRATEGY                     = "aft.recover.strategy";
+    /**
+     * Automatic fault tolerance degrade strategy
+     */
+    public static final String AFT_DEGRADE_STRATEGY                     = "aft.degrade.strategy";
+    /**
+     * Automatic fault tolerance measure strategy
+     */
+    public static final String AFT_MEASURE_STRATEGY                     = "aft.measure.strategy";
 }

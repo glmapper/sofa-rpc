@@ -69,6 +69,5 @@ public class BoltResponseFuture<V> extends AbstractResponseFuture<V> {
 
     @Override
     public void notifyListeners() {
-
     }
 }

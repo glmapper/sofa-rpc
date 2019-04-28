@@ -19,6 +19,7 @@ package com.alipay.sofa.rpc.common.json;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -60,9 +61,11 @@ public class JSONSerializer {
             StringBuilder sb = new StringBuilder();
             sb.append('{');
             Map map = (Map) object;
-            for (Object key : map.keySet()) {
-                Object value = map.get(key);
-                sb.append(serialize(key, addType)).append(':').append(serialize(value, addType)).append(',');
+            Iterator itr = map.entrySet().iterator();
+            while (itr.hasNext()) {
+                Map.Entry entry = (Map.Entry) itr.next();
+                sb.append(serialize(entry.getKey(), addType)).append(':').append(serialize(entry.getValue(), addType))
+                    .append(',');
             }
             int last = sb.length() - 1;
             if (sb.charAt(last) == ',') {
@@ -274,7 +277,7 @@ public class JSONSerializer {
             char b = "-+".indexOf(substr.charAt(0)) < 0 ? substr.charAt(0) : substr.charAt(1);
             if (b >= '0' && b <= '9') {
                 try {
-                    Long l = new Long(substr.trim());
+                    Long l = Long.valueOf(substr.trim());
                     if (l.intValue() == l) {
                         return l.intValue();
                     }

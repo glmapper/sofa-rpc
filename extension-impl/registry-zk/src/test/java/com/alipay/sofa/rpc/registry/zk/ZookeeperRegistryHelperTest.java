@@ -16,20 +16,28 @@
  */
 package com.alipay.sofa.rpc.registry.zk;
 
+import com.alipay.sofa.rpc.client.ProviderHelper;
 import com.alipay.sofa.rpc.client.ProviderInfo;
 import com.alipay.sofa.rpc.client.ProviderInfoAttrs;
 import com.alipay.sofa.rpc.client.ProviderStatus;
+import com.alipay.sofa.rpc.config.ProviderConfig;
+import com.alipay.sofa.rpc.config.ServerConfig;
+import com.alipay.sofa.rpc.log.Logger;
+import com.alipay.sofa.rpc.log.LoggerFactory;
 import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- *
- * @author <a href="mailto:lw111072@antfin.com">LiWei.Liengen</a>
- * @version $Id: ZookeeperRegistryHelperTest.java, v 0.1 2018年04月25日 下午7:09 LiWei.Liengen Exp $
+ * @author <a href="mailto:lw111072@antfin.com">LiWei.Liangen</a>
  */
 public class ZookeeperRegistryHelperTest {
+
+    private final static Logger LOGGER = LoggerFactory.getLogger(ZookeeperRegistryHelperTest.class);
 
     @Test
     public void testWarmup() throws UnsupportedEncodingException, InterruptedException {
@@ -56,7 +64,7 @@ public class ZookeeperRegistryHelperTest {
         Assert.assertEquals(700, providerInfo.getWeight());
 
         long elapsed = System.currentTimeMillis() - now;
-        System.out.println("elapsed time: " + elapsed + "ms");
+        LOGGER.info("elapsed time: " + elapsed + "ms");
 
         long sleepTime = 300 - elapsed;
         if (sleepTime >= 0) {
@@ -111,5 +119,32 @@ public class ZookeeperRegistryHelperTest {
         Assert.assertEquals(null, providerInfo.getDynamicAttr(ProviderInfoAttrs.ATTR_WARMUP_WEIGHT));
         Assert.assertEquals(ProviderStatus.AVAILABLE, providerInfo.getStatus());
         Assert.assertEquals(600, providerInfo.getWeight());
+    }
+
+    @Test
+    public void testCustomParams() {
+        ProviderConfig providerConfig = new ProviderConfig();
+        Map<String, String> map = new HashMap<String, String>();
+        map.put("x", "y");
+        map.put("a", "b");
+        providerConfig.setParameters(map);
+
+        ServerConfig server = new ServerConfig();
+        providerConfig.setServer(server);
+        List<String> urls = ZookeeperRegistryHelper.convertProviderToUrls(providerConfig);
+        LOGGER.info(urls.toString());
+
+        Assert.assertNotNull(urls);
+        Assert.assertEquals(1, urls.size());
+
+        String url = urls.get(0);
+
+        ProviderInfo providerInfo = ProviderHelper.toProviderInfo(url);
+
+        LOGGER.info(providerInfo.toString());
+
+        Assert.assertEquals("b", providerInfo.getStaticAttr("a"));
+        Assert.assertEquals("y", providerInfo.getStaticAttr("x"));
+
     }
 }
